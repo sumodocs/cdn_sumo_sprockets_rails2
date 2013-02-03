@@ -1,4 +1,3 @@
-require 'sprockets'
 
 module Rails
   class << self
@@ -7,11 +6,7 @@ module Rails
     end
 
     def initialize_pipeline
-      sprockets = Sprockets::Environment.new
-      sprockets.append_path(File.join(Rails.root, "app/assets/javascripts"))
-      sprockets.append_path(File.join(Rails.root, "app/assets/stylesheets"))
-      sprockets.append_path(File.join(Rails.root, "app/assets/images"))
-
+      sprockets = CdnSumoSprockets.new
       sprockets.context_class.instance_eval do
         include ActionView::Helpers
       end

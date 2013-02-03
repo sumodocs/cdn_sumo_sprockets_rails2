@@ -3,6 +3,7 @@
 require "fileutils"
 require 'pathname'
 require 'sprockets'
+require 'cdn_sumo_sprockets_rails2'
 
 namespace :assets do
   def ruby_rake_task(task, fork = true)
@@ -36,12 +37,9 @@ namespace :assets do
   namespace :precompile do
     def internal_precompile(digest = nil)
 
-      # Ensure that action view is loaded and the appropriate
-      # sprockets hooks get executed
-      _ = ActionView::Base
-      base_dir       = Rails.root.join("public", "assets")
+      base_dir       = CdnSumoSprockets.root.join("public", "assets")
       manifest_file  = base_dir.join("manifest.json")
-      sprockets      = Rails.asset_pipeline
+      sprockets      = CdnSumoSprockets.new
       manifest       = Sprockets::Manifest.new(sprockets, manifest_file)
       manifest.compile
 
@@ -74,12 +72,12 @@ namespace :assets do
 
   namespace :clean do
     task :all => ["assets:environment", "tmp:cache:clear"] do
-      public_asset_path = Pathname.new(Rails.public_path).join("assets")
+      public_asset_path = CdnSumoSprockets.public_path.join("assets")
       rm_rf public_asset_path, :secure => true
     end
   end
 
   task :environment do
-    Rake::Task["environment"].invoke
+    #Rake::Task["environment"].invoke
   end
 end

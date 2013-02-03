@@ -1,3 +1,24 @@
+require 'sprockets'
+
+module CdnSumoSprockets
+  def self.new
+    sprockets = Sprockets::Environment.new
+    sprockets.append_path(File.join('.', "app/assets/javascripts"))
+    sprockets.append_path(File.join('.', "app/assets/stylesheets"))
+    sprockets.append_path(File.join('.', "app/assets/images"))
+    sprockets
+  end
+
+  def self.root
+    Pathname.new('.')
+  end
+
+  def self.public_path
+    root.join("public")
+  end
+end
+
+
 require 'cdn_sumo_sprockets_rails2/rails2/asset_helpers'
 require 'cdn_sumo_sprockets_rails2/rails2/asset_pipeline'
 require 'cdn_sumo_sprockets_rails2/rails2/middleware'
