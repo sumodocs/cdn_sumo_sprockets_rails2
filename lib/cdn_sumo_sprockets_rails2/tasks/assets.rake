@@ -39,9 +39,19 @@ namespace :assets do
       # Ensure that action view is loaded and the appropriate
       # sprockets hooks get executed
       _ = ActionView::Base
-
-      manifest = Sprockets::Manifest.new(Rails.asset_pipeline , Rails.root.join("public", "assets", "manifest.json"))
+      base_dir       = Rails.root.join("public", "assets")
+      manifest_file  = base_dir.join("manifest.json")
+      sprockets      = Rails.asset_pipeline
+      manifest       = Sprockets::Manifest.new(sprockets, manifest_file)
       manifest.compile
+
+      manifest.files.each do |digest_file, details|
+        # digest_file: "ronin-422cb196418b3a97077b03d3e1744beb.gif"
+        # details:     {"digest"=>"422cb196418b3a97077b03d3e1744beb", "mtime"=>"2013-02-02T13:29:30-06:00", "size"=>27840, "logical_path"=>"ronin.gif"}
+        digest_path     = File.join(base_dir, digest_file)
+        non_digest_path = File.join(base_dir, details["logical_path"])
+        FileUtils.cp(digest_path, non_digest_path)
+      end
     end
 
     task :all do
