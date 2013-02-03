@@ -8,8 +8,9 @@ module Rails
 
     def initialize_pipeline
       sprockets = Sprockets::Environment.new
-      sprockets.cache = ActiveSupport::Cache::FileStore.new(File.join(Rails.root, "tmp", "cache", "assets"))
-      sprockets.append_path(File.join(Rails.root, "public"))
+      sprockets.append_path(File.join(Rails.root, "app/assets/javascripts"))
+      sprockets.append_path(File.join(Rails.root, "app/assets/stylesheets"))
+      sprockets.append_path(File.join(Rails.root, "app/assets/images"))
 
       sprockets.context_class.instance_eval do
         include ActionView::Helpers
@@ -18,4 +19,3 @@ module Rails
     end
   end
 end
-
